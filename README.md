@@ -13,4 +13,4 @@ This will start the main loop with 10 validators that have stake balances from 0
 
 Blocks are chosen at random but validators with a larger `stake` have a higher chance of being selected. The `weights` are calculated based on this formula:
 
-`validator_weight = random_number * (validator_stake/total_stake)`. The validator with the highest stake wins the round and gets to create the block.
+`validator_weight = (random_number * validator_stake) // total_stake`. The validator with the highest stake wins the round and gets to create the block.
