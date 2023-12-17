@@ -1,1 +1,5 @@
 /target
+blocks.db
+candidates.db
+.DS_Store
+**/.DS_Store
