@@ -18,7 +18,7 @@ Blocks are chosen at random but validators with a larger `stake` have a higher c
 
 # Espresso context
 
-Espresso is based on a consensus protocol known as HotShot. An L1 smart contract acts as a StakeTable for consensus => The Rollup contract can verify stakes via cross-contract queries.
+Espresso is based on a consensus protocol known as HotShot. An L1 smart contract acts as a StakeTable for consensus.
 
 A sequencer will submit transactions to the consensus nodes and forward block commitments agreed upon by consensus to the L1 HotShot smart contract. The HotShot contract verifies Sequencer information and queries the StakeTable contract.
 
