@@ -29,10 +29,10 @@ fn main() {
     let blocktime: u64 = env::var("DEFAULT_BLOCK_TIME").expect("Failed to get DEFAULT_BLOCK_TIME from env!").parse().expect("Failed to parse DEFAULT_BLOCK_TIME as u64!");
     let validators: Vec<Validator> = default_validator_set();
     let block_storage = Storage{
-        path: PathBuf::from(&block_db_path)
+        path: PathBuf::from(block_db_path)
     };
     let candidate_storage = Storage{
-        path: PathBuf::from(&candidate_db_path)
+        path: PathBuf::from(candidate_db_path)
     };
     initialize_blockstore_with_genesis(&block_storage);
     initialize_candidatestore(&candidate_storage);
@@ -42,9 +42,6 @@ fn main() {
     loop{
         let prev_block: Block = get_block_with_height(&block_storage, &(height - 1));
         if &chrono_timestamp().parse::<u64>().unwrap() > &(prev_block.timestamp.parse::<u64>().unwrap() + blocktime){
-            let pool: BlockChain = get_candidate_pool(&candidate_storage, &height);
-            println!("{}", format!("It is time to run the lottery. {} Blocks have been proposed!", &pool.blocks.len()));
-
             // validators may propose blocks now -> time window for proposing blocks
             for validator in &validators{
                 if round_participants.contains(&validator){
@@ -58,7 +55,9 @@ fn main() {
                 round_participants.push(&validator);
             };
 
-
+            // this will error if the pool is empty 
+            let pool: BlockChain = get_candidate_pool(&candidate_storage, &height);
+            println!("{}", format!("It is time to run the lottery. {} Blocks have been proposed!", &pool.blocks.len()));
             if pool.blocks.len() > 0{
                 /*
                     * Select a random block from the pool and add it to blocks.db
