@@ -46,7 +46,7 @@ pub fn create_validator_set(n: u64, stakes: Vec<u64>) -> Vec<Validator>{
 }
 
 pub fn default_validator_set() -> Vec<Validator>{
-    let stakes: Vec<u64> = vec![10,20,30,40,50,60,70,80,90,100];
+    let stakes: Vec<u64> = vec![100,100,100,100,100,100,100,100,100,100];
     create_validator_set(stakes.len() as u64, stakes)
 }
 
@@ -95,8 +95,11 @@ pub fn generate_random_number() -> u64{
 }
 
 // the weight of the validator + randomness
-pub fn get_validator_weight(stake: u64, total_votes: u64) -> u64{
-    generate_random_number() * (stake / total_votes)
+pub fn get_validator_weight(stake: u64, total_votes: u64) -> u128{
+    let seed = generate_random_number();
+    let weight: u128 = (seed as u128 * stake as u128) / total_votes as u128;
+    println!("Weight: {}, stake: {}, total_votes: {}, seed: {}", weight, stake, total_votes, seed);
+    weight
 }
 
 pub fn generate_random_number_vrf(){

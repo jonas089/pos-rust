@@ -65,7 +65,7 @@ fn main() {
                 */
                 let mut votes: Vec<Vote> = Vec::new();   
                 let mut total_votes: u64 = 0;
-                let mut round_weights: Vec<(Block, u64)> = Vec::new();
+                let mut round_weights: Vec<(Block, u128)> = Vec::new();
                 for block in pool.blocks{
                     votes.push(Vote{
                         block: block.clone(),
