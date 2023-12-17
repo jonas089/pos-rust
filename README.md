@@ -14,12 +14,3 @@ This will start the main loop with 10 validators that have stake balances from 0
 Blocks are chosen at random but validators with a larger `stake` have a higher chance of being selected. The `weights` are calculated based on this formula:
 
 `validator_weight = (random_number * validator_stake) // total_stake`. The validator with the highest weight wins the round and gets to create the block.
-
-
-# Espresso context
-
-Espresso is based on a consensus protocol known as HotShot. An L1 smart contract acts as a StakeTable for consensus.
-
-A sequencer will submit transactions to the consensus nodes and forward block commitments agreed upon by consensus to the L1 HotShot smart contract. The HotShot contract verifies Sequencer information and queries the StakeTable contract.
-
-The Rollup nodes submit proofs to the L1 Rollup contract, that queries the HotShot contract for the state of the sequencing process.
