@@ -5,6 +5,8 @@ use crate::types::{Block, Validator, BlockChain};
 use crate::storage::{Storage, BlockStore, CandidateStore};
 use std::fs;
 use std::path::{Path, PathBuf};
+use rand::Rng;
+
 
 pub fn hash_input(input: &str) -> String {
     let mut hasher = Sha256::new();
@@ -27,25 +29,25 @@ pub fn genesis_block() -> Block{
         prev_hash: None,
         validator: Validator{
             address: "0x00".to_string(),
-            balance: 0
+            stake: 0
         }
     }
 }
 
-pub fn create_validator_set(n: u64, balances: Vec<u64>) -> Vec<Validator>{
+pub fn create_validator_set(n: u64, stakes: Vec<u64>) -> Vec<Validator>{
     let mut validators: Vec<Validator> = Vec::new();
     for i in 0..n{
         validators.push(Validator{
             address: format!("validator{}", i),
-            balance: balances[i as usize] 
+            stake: stakes[i as usize] 
         })
     }
     validators
 }
 
 pub fn default_validator_set() -> Vec<Validator>{
-    let balances: Vec<u64> = vec![10,20,30,40,50,60,70,80,90,100];
-    create_validator_set(balances.len() as u64, balances)
+    let stakes: Vec<u64> = vec![10,20,30,40,50,60,70,80,90,100];
+    create_validator_set(stakes.len() as u64, stakes)
 }
 
 pub fn initialize_blockstore_with_genesis(storage: &Storage){
@@ -86,3 +88,18 @@ pub fn purge_dbs(blockstorage: PathBuf, candidatestorage: PathBuf){
         println!("Warning: Candidate storage does not exist.");
     }
 }
+
+// not a VRF -> add VRF soon!
+pub fn generate_random_number() -> u64{
+    rand::thread_rng().gen()
+}
+
+// the weight of the validator + randomness
+pub fn get_validator_weight(stake: u64, total_votes: u64) -> u64{
+    generate_random_number() * (stake / total_votes)
+}
+
+pub fn generate_random_number_vrf(){
+    todo!("Implement verifiable random function!");
+}
+

@@ -897,6 +897,7 @@ dependencies = [
  "chrono",
  "dotenv",
  "hex",
+ "rand",
  "rocket",
  "rusqlite",
  "serde",

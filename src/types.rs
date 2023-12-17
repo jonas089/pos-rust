@@ -91,7 +91,7 @@ impl BlockChain{
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Validator{
     pub address: String,
-    pub balance: u64
+    pub stake: u64
 }
 
 pub struct Vote{

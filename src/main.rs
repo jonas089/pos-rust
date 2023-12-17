@@ -5,7 +5,7 @@
 
     The main loop will reset the network and handle block creation.
     Verifiable randomness should be implemented to run the lottery / select a proposed block from the pool.
-    Validator state / stake balances should be verifiable on-chain.
+    Validator state / stake stakes should be verifiable on-chain.
     Espresso uses a stake table contract to verify validators' stakes.
 */
 
@@ -19,7 +19,7 @@ use storage::{Storage, BlockStore, CandidateStore};
 use dotenv::dotenv;
 use std::{env, path::PathBuf};
 
-use crate::helpers::hash_input;
+use crate::helpers::{hash_input, get_validator_weight};
 
 fn main() {
     dotenv().ok();
@@ -64,16 +64,21 @@ fn main() {
 
                 */
                 let mut votes: Vec<Vote> = Vec::new();   
-                let mut total_votes = 0;             
+                let mut total_votes: u64 = 0;
+                let mut round_weights: Vec<(Block, u64)> = Vec::new();
                 for block in pool.blocks{
                     votes.push(Vote{
                         block: block.clone(),
-                        stake: block.clone().validator.balance
+                        stake: block.clone().validator.stake
                     });
-                    total_votes += &block.validator.balance;
+                    total_votes += &block.validator.stake;
                 };
-
-                let lottery_winner = votes[0].block.clone();
+                for vote in &votes{
+                    round_weights.push((vote.block.clone(), get_validator_weight(vote.block.validator.stake, total_votes)));
+                }
+                let lottery_winner: Block = {
+                    round_weights.iter().max_by_key(|&(_block, value)| value).unwrap().0.clone()
+                };
                 println!("{}", format!("Lottery winner: {}, timestamp: {}", &lottery_winner.validator.address, &lottery_winner.timestamp));
                 let _ = BlockStore::insert(&block_storage, height, lottery_winner);
 
