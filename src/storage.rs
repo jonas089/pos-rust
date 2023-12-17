@@ -120,8 +120,7 @@ impl CandidateStore for Storage{
 
 #[test]
 fn test_block_store(){
-    use crate::helpers::{chrono_timestamp, genesis_block};
-    use crate::types::Validator;
+    use crate::helpers::genesis_block;
     dotenv().ok();
     let block_db_path = env::var("DEFAULT_BLOCK_DB_PATH").expect("Failed to get Block db path from env!");
     let storage = Storage{
